@@ -37,8 +37,6 @@ Go to your Mastodon's preferences page.
 
 ### Send to specific one account
 
-MastodonNotification.php
-
 ```php
 <?php
 
@@ -142,6 +140,22 @@ class MastodonNotification extends Notification implements ShouldQueue
 }
 ```
 
+### Set options
+https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#posting-a-new-status
+
+```php
+    public function toMastodon($notifiable)
+    {
+        $status = 'test';
+        
+        $options = [
+            'visibility' => 'unlisted',
+        ];
+
+        return MastodonMessage::create($status)
+                              ->options($options);
+    }
+```
 
 
 ## LICENSE

@@ -47,8 +47,10 @@ class MastodonChannel
             return;
         }
 
+        $options = $message->options;
+
         $response = Mastodon::domain($domain)
                             ->token($token)
-                            ->createStatus($status);
+                            ->createStatus($status, $options);
     }
 }

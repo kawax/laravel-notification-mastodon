@@ -20,6 +20,11 @@ class MastodonMessage
     public $token;
 
     /**
+     * @var array
+     */
+    public $options;
+
+    /**
      * MastodonMessage constructor.
      *
      * @param string $status
@@ -76,14 +81,26 @@ class MastodonMessage
     }
 
     /**
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function options(array $options)
+    {
+        $this->options = $options;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
     {
-        return [
+        return array_merge([
             'domain' => $this->domain,
             'token'  => $this->token,
             'status' => $this->status,
-        ];
+        ], $this->options);
     }
 }
