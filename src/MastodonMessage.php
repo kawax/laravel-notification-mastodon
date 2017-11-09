@@ -22,7 +22,7 @@ class MastodonMessage
     /**
      * @var array
      */
-    public $options;
+    public $options = [];
 
     /**
      * MastodonMessage constructor.
