@@ -35,7 +35,6 @@ Go to your Mastodon's preferences page.
 
 ## Usage
 
-### Send to specific one account
 
 ```php
 <?php
@@ -52,6 +51,18 @@ use Revolution\Laravel\Notification\Mastodon\MastodonMessage;
 class MastodonNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    protected $status;
+    
+    /**
+     * Create a new notification instance.
+     *
+     * @return void
+     */
+    public function __construct($status)
+    {
+        $this->status = $status;
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -74,70 +85,50 @@ class MastodonNotification extends Notification implements ShouldQueue
      */
     public function toMastodon($notifiable)
     {
-        $status = 'test';
-
-        return MastodonMessage::create($status)
-                              ->domain(config('services.mastodon.domain'))
-                              ->token(config('services.mastodon.token'));
-        
-        // or 
-        return MastodonMessage::create($status);
+        return MastodonMessage::create($this->status);
     }
 }
+```
+
+### Send to specific one account
+
+```php
+
+Notification::route('mastodon-domain', config('services.mastodon.domain'))
+            ->route('mastodon-token', config('services.mastodon.token'))
+            ->notify(new MastodonNotification('test'));
 ```
 
 ### Send to user's account
 Get token by https://github.com/kawax/socialite-mastodon
 
-
 ```php
-<?php
-
-namespace App\Notifications;
-
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-
-use Revolution\Laravel\Notification\Mastodon\MastodonChannel;
-use Revolution\Laravel\Notification\Mastodon\MastodonMessage;
-
-class MastodonNotification extends Notification implements ShouldQueue
+class User extends Authenticatable
 {
-    use Queueable;
-
+    use Notifiable;
+    
     /**
-     * Get the notification's delivery channels.
-     *
-     * @param  mixed $notifiable
-     *
-     * @return array
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
      */
-    public function via($notifiable)
+    public function routeNotificationForMastodonDomain($notification)
     {
-        return [MastodonChannel::class];
+        return $this->domain;
     }
     
     /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed $notifiable
-     *
-     * @return MastodonMessage
+     * @param  \Illuminate\Notifications\Notification  $notification
+     * @return string
      */
-    public function toMastodon($notifiable)
+    public function routeNotificationForMastodonToken($notification)
     {
-        $status = 'test';
-        
-        // domain and token from somewhere
-        $domain = $notifiable->domain;
-        $token = $notifiable->token;
-
-        return MastodonMessage::create($status)
-                              ->domain($domain)
-                              ->token($token);
+        return $this->token;
     }
 }
+```
+
+```php
+$user->notify(new MastodonNotification('test'));
 ```
 
 ### Set options
@@ -145,14 +136,12 @@ https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#post
 
 ```php
     public function toMastodon($notifiable)
-    {
-        $status = 'test';
-        
+    {        
         $options = [
             'visibility' => 'unlisted',
         ];
 
-        return MastodonMessage::create($status)
+        return MastodonMessage::create($this->status)
                               ->options($options);
     }
 ```
