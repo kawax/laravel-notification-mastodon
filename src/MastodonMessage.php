@@ -27,7 +27,7 @@ class MastodonMessage
     /**
      * MastodonMessage constructor.
      *
-     * @param string $status
+     * @param  string  $status
      */
     public function __construct(string $status)
     {
@@ -35,7 +35,7 @@ class MastodonMessage
     }
 
     /**
-     * @param string $status
+     * @param  string  $status
      *
      * @return $this
      */
@@ -45,7 +45,7 @@ class MastodonMessage
     }
 
     /**
-     * @param string $status
+     * @param  string  $status
      *
      * @return $this
      */
@@ -57,7 +57,7 @@ class MastodonMessage
     }
 
     /**
-     * @param string $domain
+     * @param  string  $domain
      *
      * @return $this
      */
@@ -69,7 +69,7 @@ class MastodonMessage
     }
 
     /**
-     * @param string $token
+     * @param  string  $token
      *
      * @return $this
      */
@@ -81,7 +81,7 @@ class MastodonMessage
     }
 
     /**
-     * @param array $options
+     * @param  array  $options
      *
      * @return $this
      */
@@ -97,10 +97,13 @@ class MastodonMessage
      */
     public function toArray(): array
     {
-        return array_merge([
-            'domain' => $this->domain,
-            'token'  => $this->token,
-            'status' => $this->status,
-        ], $this->options);
+        return array_merge(
+            [
+                'domain' => $this->domain,
+                'token'  => $this->token,
+                'status' => $this->status,
+            ],
+            $this->options
+        );
     }
 }
