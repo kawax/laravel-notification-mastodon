@@ -132,7 +132,7 @@ $user->notify(new MastodonNotification('test'));
 ```
 
 ### Set options
-https://github.com/tootsuite/documentation/blob/master/Using-the-API/API.md#posting-a-new-status
+https://docs.joinmastodon.org/methods/statuses/
 
 ```php
     public function toMastodon($notifiable)
