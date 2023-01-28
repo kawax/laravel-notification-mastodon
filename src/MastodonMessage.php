@@ -7,22 +7,22 @@ class MastodonMessage
     /**
      * @var string
      */
-    public $status;
+    public string $status = '';
 
     /**
      * @var string
      */
-    public $domain;
+    public string $domain = '';
 
     /**
      * @var string
      */
-    public $token;
+    public string $token = '';
 
     /**
      * @var array
      */
-    public $options = [];
+    public array $options = [];
 
     /**
      * MastodonMessage constructor.
@@ -39,7 +39,7 @@ class MastodonMessage
      *
      * @return $this
      */
-    public static function create(string $status)
+    public static function create(string $status): static
     {
         return new static($status);
     }
@@ -49,7 +49,7 @@ class MastodonMessage
      *
      * @return $this
      */
-    public function status(string $status)
+    public function status(string $status): static
     {
         $this->status = $status;
 
@@ -61,7 +61,7 @@ class MastodonMessage
      *
      * @return $this
      */
-    public function domain(string $domain)
+    public function domain(string $domain): static
     {
         $this->domain = $domain;
 
@@ -73,7 +73,7 @@ class MastodonMessage
      *
      * @return $this
      */
-    public function token(string $token)
+    public function token(string $token): static
     {
         $this->token = $token;
 
@@ -85,7 +85,7 @@ class MastodonMessage
      *
      * @return $this
      */
-    public function options(array $options)
+    public function options(array $options): static
     {
         $this->options = $options;
 

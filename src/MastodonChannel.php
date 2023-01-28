@@ -15,7 +15,7 @@ class MastodonChannel
      *
      * @return void
      */
-    public function send($notifiable, Notification $notification)
+    public function send(mixed $notifiable, Notification $notification): void
     {
         /**
          * @var MastodonMessage $message
@@ -58,8 +58,8 @@ class MastodonChannel
 
         $options = $message->options;
 
-        $response = Mastodon::domain($domain)
-                            ->token($token)
-                            ->createStatus($status, $options);
+        Mastodon::domain($domain)
+                ->token($token)
+                ->createStatus($status, $options);
     }
 }

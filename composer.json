@@ -8,10 +8,10 @@
   ],
   "license": "MIT",
   "require": {
-    "php": "^7.2||^8.0",
+    "php": "^8.0",
     "illuminate/notifications": "*",
     "illuminate/support": "*",
-    "revolution/laravel-mastodon-api": "^2.0"
+    "revolution/laravel-mastodon-api": "^3.0"
   },
   "autoload": {
     "psr-4": {
