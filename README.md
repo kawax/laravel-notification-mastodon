@@ -53,7 +53,7 @@ class MastodonNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $status;
-    
+
     /**
      * Create a new notification instance.
      *
@@ -75,7 +75,7 @@ class MastodonNotification extends Notification implements ShouldQueue
     {
         return [MastodonChannel::class];
     }
-    
+
     /**
      * Get the array representation of the notification.
      *
@@ -93,9 +93,10 @@ class MastodonNotification extends Notification implements ShouldQueue
 ### Send to specific one account
 
 ```php
+use Illuminate\Support\Facades\Notification;
+use Revolution\Laravel\Notification\Mastodon\MastodonRoute;
 
-Notification::route('mastodon-domain', config('services.mastodon.domain'))
-            ->route('mastodon-token', config('services.mastodon.token'))
+Notification::route('mastodon', MastodonRoute::to(config('services.mastodon.domain'), config('services.mastodon.token')))
             ->notify(new MastodonNotification('test'));
 ```
 
@@ -103,26 +104,16 @@ Notification::route('mastodon-domain', config('services.mastodon.domain'))
 Get token by https://github.com/kawax/socialite-mastodon
 
 ```php
+use Illuminate\Notifications\Notifiable;
+use Revolution\Laravel\Notification\Mastodon\MastodonRoute;
+
 class User extends Authenticatable
 {
     use Notifiable;
-    
-    /**
-     * @param  \Illuminate\Notifications\Notification  $notification
-     * @return string
-     */
-    public function routeNotificationForMastodonDomain($notification)
+
+    public function routeNotificationForMastodon($notification): MastodonRoute
     {
-        return $this->domain;
-    }
-    
-    /**
-     * @param  \Illuminate\Notifications\Notification  $notification
-     * @return string
-     */
-    public function routeNotificationForMastodonToken($notification)
-    {
-        return $this->token;
+        return MastodonRoute::to(domain: $this->domain, token: $this->token);
     }
 }
 ```
@@ -136,7 +127,7 @@ https://docs.joinmastodon.org/methods/statuses/
 
 ```php
     public function toMastodon($notifiable)
-    {        
+    {
         $options = [
             'visibility' => 'unlisted',
         ];

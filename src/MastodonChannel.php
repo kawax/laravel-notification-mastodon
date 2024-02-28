@@ -4,7 +4,6 @@ namespace Revolution\Laravel\Notification\Mastodon;
 
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Config;
-
 use Revolution\Mastodon\Facades\Mastodon;
 
 class MastodonChannel
@@ -28,7 +27,16 @@ class MastodonChannel
             return;
         }
 
-        $domain = $message->domain;
+        /**
+         * @var MastodonRoute $route
+         */
+        $route = $notifiable->routeNotificationFor('mastodon');
+
+        $domain = $route?->domain;
+
+        if (empty($domain)) {
+            $domain = $message->domain;
+        }
 
         if (empty($domain)) {
             $domain = $notifiable->routeNotificationFor('mastodon-domain');
@@ -42,7 +50,11 @@ class MastodonChannel
             return;
         }
 
-        $token = $message->token;
+        $domain = $route?->token;
+
+        if (empty($token)) {
+            $token = $message->token;
+        }
 
         if (empty($token)) {
             $token = $notifiable->routeNotificationFor('mastodon-token');
@@ -59,7 +71,7 @@ class MastodonChannel
         $options = $message->options;
 
         Mastodon::domain($domain)
-                ->token($token)
-                ->createStatus($status, $options);
+            ->token($token)
+            ->createStatus($status, $options);
     }
 }
