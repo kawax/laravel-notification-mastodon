@@ -50,7 +50,7 @@ class MastodonChannel
             return;
         }
 
-        $domain = $route?->token;
+        $token = $route?->token;
 
         if (empty($token)) {
             $token = $message->token;
