@@ -2,15 +2,17 @@
 
 namespace Revolution\Laravel\Notification\Mastodon;
 
-class MastodonRoute
+final class MastodonRoute
 {
-    public function __construct(public string $domain, public string $token)
-    {
+    public function __construct(
+        public string $domain,
+        public string $token,
+    ) {
         //
     }
 
-    public static function to(string $domain, string $token): static
+    public static function to(string $domain, string $token): self
     {
-        return new static($domain, $token);
+        return new self($domain, $token);
     }
 }
