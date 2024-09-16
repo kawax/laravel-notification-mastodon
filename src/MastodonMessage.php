@@ -2,12 +2,14 @@
 
 namespace Revolution\Laravel\Notification\Mastodon;
 
-class MastodonMessage
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Traits\Conditionable;
+use Illuminate\Support\Traits\Macroable;
+
+final class MastodonMessage implements Arrayable
 {
-    /**
-     * @var string
-     */
-    public string $status = '';
+    use Conditionable;
+    use Macroable;
 
     /**
      * @var string
@@ -24,86 +26,53 @@ class MastodonMessage
      */
     public array $options = [];
 
-    /**
-     * MastodonMessage constructor.
-     *
-     * @param  string  $status
-     */
-    public function __construct(string $status)
+    public function __construct(public string $status)
     {
-        $this->status = $status;
+        //
     }
 
-    /**
-     * @param  string  $status
-     *
-     * @return $this
-     */
-    public static function create(string $status): static
+    public static function create(string $status): self
     {
-        return new static($status);
+        return new self($status);
     }
 
-    /**
-     * @param  string  $status
-     *
-     * @return $this
-     */
-    public function status(string $status): static
+    public function status(string $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * @param  string  $domain
-     *
-     * @return $this
-     */
-    public function domain(string $domain): static
+    public function domain(string $domain): self
     {
         $this->domain = $domain;
 
         return $this;
     }
 
-    /**
-     * @param  string  $token
-     *
-     * @return $this
-     */
-    public function token(string $token): static
+    public function token(string $token): self
     {
         $this->token = $token;
 
         return $this;
     }
 
-    /**
-     * @param  array  $options
-     *
-     * @return $this
-     */
-    public function options(array $options): static
+    public function options(array $options): self
     {
         $this->options = $options;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function toArray(): array
     {
         return array_merge(
             [
                 'domain' => $this->domain,
-                'token'  => $this->token,
+                'token' => $this->token,
                 'status' => $this->status,
             ],
-            $this->options
+            $this->options,
         );
     }
 }
