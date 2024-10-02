@@ -50,7 +50,7 @@ final class MastodonMessage implements Arrayable
         return $this;
     }
 
-    public function token(string $token): self
+    public function token(#[\SensitiveParameter] string $token): self
     {
         $this->token = $token;
 
