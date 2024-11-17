@@ -14,7 +14,7 @@ class MastodonChannel
      *
      * @return void
      */
-    public function send(mixed $notifiable, Notification $notification): void
+    public function send(mixed $notifiable, Notification $notification): ?array
     {
         /**
          * @var MastodonMessage $message
@@ -24,7 +24,7 @@ class MastodonChannel
         $status = $message->status;
 
         if (empty($status)) {
-            return;
+            return null;
         }
 
         /**
@@ -47,7 +47,7 @@ class MastodonChannel
         }
 
         if (empty($domain)) {
-            return;
+            return null;
         }
 
         $token = $route?->token;
@@ -65,12 +65,12 @@ class MastodonChannel
         }
 
         if (empty($token)) {
-            return;
+            return null;
         }
 
         $options = $message->options;
 
-        Mastodon::domain($domain)
+        return Mastodon::domain($domain)
             ->token($token)
             ->createStatus($status, $options);
     }
