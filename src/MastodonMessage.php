@@ -11,19 +11,10 @@ final class MastodonMessage implements Arrayable
     use Conditionable;
     use Macroable;
 
-    /**
-     * @var string
-     */
     public string $domain = '';
 
-    /**
-     * @var string
-     */
     public string $token = '';
 
-    /**
-     * @var array
-     */
     public array $options = [];
 
     public function __construct(public string $status)

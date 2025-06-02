@@ -9,9 +9,6 @@ use Revolution\Mastodon\Facades\Mastodon;
 class MastodonChannel
 {
     /**
-     * @param  mixed  $notifiable
-     * @param  Notification  $notification
-     *
      * @return void
      */
     public function send(mixed $notifiable, Notification $notification): ?array
