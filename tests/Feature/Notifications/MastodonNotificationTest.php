@@ -121,6 +121,19 @@ class MastodonNotificationTest extends TestCase
         $this->assertSame('private', $array['visibility']);
     }
 
+    public function test_message_status_method()
+    {
+        $message = MastodonMessage::create('Initial status');
+
+        $this->assertSame('Initial status', $message->status);
+
+        $result = $message->status('Updated status');
+
+        $this->assertSame($message, $result);
+        $this->assertSame('Updated status', $message->status);
+        $this->assertSame('Updated status', $message->toArray()['status']);
+    }
+
     public function test_route_creation()
     {
         $route = MastodonRoute::to('mastodon.social', 'test-token');
