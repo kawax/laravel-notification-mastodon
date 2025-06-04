@@ -25,6 +25,12 @@
     }
   ],
   "require-dev": {
-    "laravel/pint": "^1.22"
+    "laravel/pint": "^1.22",
+    "orchestra/testbench": "^10.3"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   }
 }
