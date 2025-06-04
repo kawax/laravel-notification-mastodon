@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Notification as NotificationFacade;
-use Mockery;
 use Revolution\Laravel\Notification\Mastodon\MastodonChannel;
 use Revolution\Laravel\Notification\Mastodon\MastodonMessage;
 use Revolution\Laravel\Notification\Mastodon\MastodonRoute;
@@ -16,11 +15,6 @@ use Tests\TestCase;
 
 class MastodonNotificationTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function test_notification_fake()
     {
         NotificationFacade::fake();
