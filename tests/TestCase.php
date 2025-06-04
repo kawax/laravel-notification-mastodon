@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Foundation\Application;
-use Revolution\Laravel\Notification\Mastodon\MastodonServiceProvider;
 
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
