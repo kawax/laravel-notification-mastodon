@@ -167,6 +167,100 @@ class MastodonNotificationTest extends TestCase
 
         $this->assertSame('user-token', $token);
     }
+
+    public function test_channel_sends_status_to_mastodon_api()
+    {
+        $mockResponse = ['id' => '123', 'content' => 'Test status'];
+        $mockToken = \Mockery::mock();
+        $mockToken->expects('createStatus')
+            ->with('Test status', [])
+            ->andReturn($mockResponse);
+
+        $mockDomain = \Mockery::mock();
+        $mockDomain->expects('token')
+            ->with('test-token')
+            ->andReturn($mockToken);
+
+        $mockFactory = \Mockery::mock();
+        $mockFactory->expects('domain')
+            ->with('mastodon.social')
+            ->andReturn($mockDomain);
+
+        $this->app->instance(\Revolution\Mastodon\Contracts\Factory::class, $mockFactory);
+
+        $channel = new MastodonChannel;
+        $user = new TestUser;
+        $notification = new TestNotification('Test status');
+
+        $result = $channel->send($user, $notification);
+
+        $this->assertIsArray($result);
+        $this->assertEquals('123', $result['id']);
+        $this->assertEquals('Test status', $result['content']);
+    }
+
+    public function test_channel_uses_message_domain_and_token()
+    {
+        $mockResponse = ['id' => '456'];
+        $mockToken = \Mockery::mock();
+        $mockToken->expects('createStatus')
+            ->with('Test status', ['visibility' => 'private'])
+            ->andReturn($mockResponse);
+
+        $mockDomain = \Mockery::mock();
+        $mockDomain->expects('token')
+            ->with('message-token')
+            ->andReturn($mockToken);
+
+        $mockFactory = \Mockery::mock();
+        $mockFactory->expects('domain')
+            ->with('message.mastodon')
+            ->andReturn($mockDomain);
+
+        $this->app->instance(\Revolution\Mastodon\Contracts\Factory::class, $mockFactory);
+
+        $channel = new MastodonChannel;
+        $user = new TestUser;
+        $notification = new TestNotificationWithDomainAndToken('Test status');
+
+        $result = $channel->send($user, $notification);
+
+        $this->assertIsArray($result);
+        $this->assertEquals('456', $result['id']);
+    }
+
+    public function test_channel_uses_user_domain_and_token_routing()
+    {
+        $this->app['config']->set('services.mastodon.domain', null);
+        $this->app['config']->set('services.mastodon.token', null);
+
+        $mockResponse = ['id' => '789'];
+        $mockToken = \Mockery::mock();
+        $mockToken->expects('createStatus')
+            ->with('Test status', [])
+            ->andReturn($mockResponse);
+
+        $mockDomain = \Mockery::mock();
+        $mockDomain->expects('token')
+            ->with('user-token')
+            ->andReturn($mockToken);
+
+        $mockFactory = \Mockery::mock();
+        $mockFactory->expects('domain')
+            ->with('user-domain.mastodon')
+            ->andReturn($mockDomain);
+
+        $this->app->instance(\Revolution\Mastodon\Contracts\Factory::class, $mockFactory);
+
+        $channel = new MastodonChannel;
+        $user = new TestUserWithDomainAndTokenRouting;
+        $notification = new TestNotification('Test status');
+
+        $result = $channel->send($user, $notification);
+
+        $this->assertIsArray($result);
+        $this->assertEquals('789', $result['id']);
+    }
 }
 
 class TestNotification extends Notification
@@ -250,6 +344,41 @@ class TestUserWithDomainRouting extends Model
 class TestUserWithTokenRouting extends Model
 {
     use Notifiable;
+
+    public function routeNotificationForMastodonToken($notification): string
+    {
+        return 'user-token';
+    }
+}
+
+class TestNotificationWithDomainAndToken extends Notification
+{
+    public function __construct(
+        protected string $status,
+    ) {}
+
+    public function via(object $notifiable): array
+    {
+        return [MastodonChannel::class];
+    }
+
+    public function toMastodon(object $notifiable): MastodonMessage
+    {
+        return MastodonMessage::create($this->status)
+            ->domain('message.mastodon')
+            ->token('message-token')
+            ->options(['visibility' => 'private']);
+    }
+}
+
+class TestUserWithDomainAndTokenRouting extends Model
+{
+    use Notifiable;
+
+    public function routeNotificationForMastodonDomain($notification): string
+    {
+        return 'user-domain.mastodon';
+    }
 
     public function routeNotificationForMastodonToken($notification): string
     {
