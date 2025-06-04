@@ -35,7 +35,7 @@ class MastodonNotificationTest extends TestCase
     {
         NotificationFacade::fake();
 
-        $user = new TestUser();
+        $user = new TestUser;
         $user->notify(new TestNotification('Test status'));
 
         NotificationFacade::assertSentTo($user, TestNotification::class);
@@ -45,7 +45,7 @@ class MastodonNotificationTest extends TestCase
     {
         NotificationFacade::fake();
 
-        $user = new TestUserWithRouting();
+        $user = new TestUserWithRouting;
         $user->notify(new TestNotification('Test status'));
 
         NotificationFacade::assertSentTo($user, TestNotification::class);
@@ -53,8 +53,8 @@ class MastodonNotificationTest extends TestCase
 
     public function test_channel_returns_null_for_empty_status()
     {
-        $channel = new MastodonChannel();
-        $user = new TestUser();
+        $channel = new MastodonChannel;
+        $user = new TestUser;
         $notification = new TestNotification('');
 
         $result = $channel->send($user, $notification);
@@ -66,8 +66,8 @@ class MastodonNotificationTest extends TestCase
     {
         $this->app['config']->set('services.mastodon.domain', null);
 
-        $channel = new MastodonChannel();
-        $user = new TestUser();
+        $channel = new MastodonChannel;
+        $user = new TestUser;
         $notification = new TestNotification('Test status');
 
         $result = $channel->send($user, $notification);
@@ -79,8 +79,8 @@ class MastodonNotificationTest extends TestCase
     {
         $this->app['config']->set('services.mastodon.token', null);
 
-        $channel = new MastodonChannel();
-        $user = new TestUser();
+        $channel = new MastodonChannel;
+        $user = new TestUser;
         $notification = new TestNotification('Test status');
 
         $result = $channel->send($user, $notification);
@@ -137,9 +137,9 @@ class MastodonNotificationTest extends TestCase
 
     public function test_user_routing_methods()
     {
-        $user = new TestUserWithRouting();
+        $user = new TestUserWithRouting;
         $route = $user->routeNotificationForMastodon(new TestNotification('test'));
-        
+
         $this->assertInstanceOf(MastodonRoute::class, $route);
         $this->assertSame('user.mastodon', $route->domain);
         $this->assertSame('user-token', $route->token);
@@ -147,17 +147,17 @@ class MastodonNotificationTest extends TestCase
 
     public function test_user_domain_routing()
     {
-        $user = new TestUserWithDomainRouting();
+        $user = new TestUserWithDomainRouting;
         $domain = $user->routeNotificationForMastodonDomain(new TestNotification('test'));
-        
+
         $this->assertSame('user-domain.mastodon', $domain);
     }
 
     public function test_user_token_routing()
     {
-        $user = new TestUserWithTokenRouting();
+        $user = new TestUserWithTokenRouting;
         $token = $user->routeNotificationForMastodonToken(new TestNotification('test'));
-        
+
         $this->assertSame('user-token', $token);
     }
 }
