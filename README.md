@@ -6,9 +6,11 @@
 
 ## Installation
 
+This package is part of [revolution/laravel-mastodon-api](https://github.com/invokable/laravel-mastodon-api).
+
 ### Composer
 ```
-composer require revolution/laravel-notification-mastodon
+composer require revolution/laravel-mastodon-api
 ```
 
 ## Config
@@ -137,7 +139,5 @@ https://docs.joinmastodon.org/methods/statuses/
     }
 ```
 
-
 ## LICENSE
 MIT  
-Copyright kawax
