@@ -101,7 +101,7 @@ Notification::route('mastodon', MastodonRoute::to(config('services.mastodon.doma
 ```
 
 ### Send to user's account
-Get token by https://github.com/kawax/socialite-mastodon
+Get token by https://github.com/invokable/socialite-mastodon
 
 ```php
 use Illuminate\Notifications\Notifiable;
